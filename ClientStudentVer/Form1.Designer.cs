@@ -224,6 +224,7 @@ namespace ClientStudentVer
             this.UpdateButt.TabIndex = 25;
             this.UpdateButt.Text = "Cập nhật";
             this.UpdateButt.UseVisualStyleBackColor = true;
+            this.UpdateButt.Click += new System.EventHandler(this.UpdateButt_Click);
             // 
             // label7
             // 
@@ -260,7 +261,7 @@ namespace ClientStudentVer
             // FinishSignUpButt
             // 
             this.FinishSignUpButt.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.FinishSignUpButt.Location = new System.Drawing.Point(151, 559);
+            this.FinishSignUpButt.Location = new System.Drawing.Point(151, 608);
             this.FinishSignUpButt.Name = "FinishSignUpButt";
             this.FinishSignUpButt.Size = new System.Drawing.Size(273, 46);
             this.FinishSignUpButt.TabIndex = 37;

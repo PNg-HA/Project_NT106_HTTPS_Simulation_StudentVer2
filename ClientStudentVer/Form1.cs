@@ -389,13 +389,13 @@ namespace ClientStudentVer
                                         + "}\r\n";
                 string reqHeader = "POST /index.txt" + " HTTP/1.1\r\n" // request line
                                   // request headers
-                               + "Host: " + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
-                               + "Content-type: application/json\r\n"
+                               + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
                                + "Content-length: " + reqBody.Length + "\r\n"
+                               + "Authorization: Basic " + credentials + "\r\n"
+                               + "Content-type: application/json\r\n"
                                + "Connection: keep-alive \r\n"
                                + "Upgrade-Insecure-Requests: 1\r\n"
                                + "User-Agent: C# client\r\n"
-                               + "Authorization: Basic " + credentials + "\r\n"
                                + "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\n"
                                + "Accept-Encoding: gzip, deflate\r\n"
                                + "Accept-Language: en-US,en;q=0.9\r\n"
@@ -405,7 +405,7 @@ namespace ClientStudentVer
                 File.WriteAllText(@"..\resources\POST.txt", reqHeader + reqBody);
                 EncryptFile(@"..\resources\POST.txt", PublicKey);
                 SendEncryptedFile(@"..\resources\POST.enc");
-                SignInButton_Clicked();
+                
             }
         }
         private void passTextBox_TextChanged(object sender, EventArgs e)
@@ -451,6 +451,34 @@ namespace ClientStudentVer
                 return;
             }
             LogTextBox.AppendText(log + Environment.NewLine);
+        }
+        private int HandleResponseHeader(string headers)
+        {
+            print_status(headers);
+            string resp_line = headers.Substring(0, headers.IndexOf("\r\n"));
+            string[] resp_line_items = resp_line.Split(' ');
+            if (resp_line_items[1] != "200")  // failed request
+            {
+                PrintResponse(headers);
+                return 1;
+            }
+
+            return 0;
+        }
+        private void print_status(string message)
+        {
+            if (statusLabel.InvokeRequired)
+            {
+                statusLabel.Invoke(new Action<string>(print_status), message);
+                return;
+            }
+            string resp_line = message.Substring(0, message.IndexOf("\r\n"));
+            string[] resp_line_items = resp_line.Split(' ');
+            statusLabel.Text = "";
+            for (int i = 1; i < resp_line_items.Length; i++)
+            {
+                statusLabel.Text += resp_line_items[i] + " ";
+            }
         }
         private void PrintResponse(string msg)
         {
@@ -517,6 +545,7 @@ namespace ClientStudentVer
             DecryptFile("response.enc");
             Print_log("Decrypt file successfullly.");
             LoadFile(@"..\resources\" + "response.txt");
+            
         }
         private void EstablishTCPConnection()
         {
@@ -589,7 +618,21 @@ namespace ClientStudentVer
         private void LoadFile (string inFile)
         {
             StreamReader sr = new StreamReader(inFile);
-            PrintResponse(sr.ReadToEnd());
+            string response = sr.ReadToEnd();
+
+            string[] resp_items = response.Split(new string[] { "\r\n\r\n" }, StringSplitOptions.None);
+            int Errorflag = HandleResponseHeader(resp_items[0]);
+            if (Errorflag == 0)
+            {
+                if (!resp_items[1].Contains(':')){   // repsonse for logout
+                    var a = 1;
+                }
+                else
+                {
+                    SignInButton_Clicked();
+                }
+                
+            }
         }
         private string Base64Encode(string plainText)
         {
@@ -597,7 +640,28 @@ namespace ClientStudentVer
             return System.Convert.ToBase64String(plainTextBytes);
         }
 
-        
+        private void UpdateButt_Click(object sender, EventArgs e)
+        {
+            string reqBody = "";
+            string reqHeader = "GET /index.json" + " HTTP/1.1\r\n" // request line
+                                                                   // request headers
+                           + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
+                           + "Content-length: " + reqBody.Length + "\r\n"
+                           + "Authorization: Basic " + credentials + "\r\n"
+                           + "Content-type: application/json\r\n"
+                           + "Connection: keep-alive \r\n"
+                           + "Upgrade-Insecure-Requests: 1\r\n"
+                           + "User-Agent: C# client\r\n"
+                           + "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\n"
+                           + "Accept-Encoding: gzip, deflate\r\n"
+                           + "Accept-Language: en-US,en;q=0.9\r\n"
+                           + "\r\n";
+
+            usernameTextBox.Text = Base64Decode(credentials);
+            File.WriteAllText(@"..\resources\GET.txt", reqHeader + reqBody);
+            EncryptFile(@"..\resources\GET.txt", PublicKey);
+            SendEncryptedFile(@"..\resources\GET.enc");
+        }
 
         public static string Base64Decode(string base64EncodedData)
         {
