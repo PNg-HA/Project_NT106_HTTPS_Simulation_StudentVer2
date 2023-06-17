@@ -1,0 +1,15 @@
+POST /index.txt HTTP/1.1
+Host: https://127.0.0.1:8089
+Content-length: 21
+Authorization: Basic YW5ocG5ofDEyMw==
+Content-type: application/json
+Connection: keep-alive 
+Upgrade-Insecure-Requests: 1
+User-Agent: C# client
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,en;q=0.9
+
+{
+  anhpnh: 123
+}

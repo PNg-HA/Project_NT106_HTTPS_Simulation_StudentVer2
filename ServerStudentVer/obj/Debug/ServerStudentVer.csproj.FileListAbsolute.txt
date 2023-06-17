@@ -24,3 +24,8 @@ D:\Move\UIT\HK4\LTM\Project\StudentVer\ServerStudentVer\obj\Debug\ServerStudentV
 D:\Move\UIT\HK4\LTM\Project\StudentVer\ServerStudentVer\obj\Debug\ServerStudentVer.csproj.CopyComplete
 D:\Move\UIT\HK4\LTM\Project\StudentVer\ServerStudentVer\obj\Debug\ServerStudentVer.exe
 D:\Move\UIT\HK4\LTM\Project\StudentVer\ServerStudentVer\obj\Debug\ServerStudentVer.pdb
+D:\Move\UIT\HK4\LTM\Project\StudentVer\ServerStudentVer\bin\Debug\ServerStudentVer.exe.manifest
+D:\Move\UIT\HK4\LTM\Project\StudentVer\ServerStudentVer\bin\Debug\ServerStudentVer.application
+D:\Move\UIT\HK4\LTM\Project\StudentVer\ServerStudentVer\obj\Debug\ServerStudentVer.TrustInfo.xml
+D:\Move\UIT\HK4\LTM\Project\StudentVer\ServerStudentVer\obj\Debug\ServerStudentVer.exe.manifest
+D:\Move\UIT\HK4\LTM\Project\StudentVer\ServerStudentVer\obj\Debug\ServerStudentVer.application

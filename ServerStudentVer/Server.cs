@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -406,23 +405,87 @@ namespace ServerStudentVer
             stream.Flush();
             AddMessageToLog("Send cert to " + client.Client.RemoteEndPoint.ToString());
         }
+        private string GenerateInfo()
+        {
+            DateTime timestamp = DateTime.Now;
+            return
+                "Server: C# server\r\n"
+                + "Content-Type: text/html/json; charset=UTF-8\r\n"
+                + "Date: " + timestamp.ToString() + "\r\n"
+                + "Connection: keep-alive\r\n"
+                + "Content-Language: en\r\n";
+        }
         private void HandleMessage(string message, TcpClient client, RSA rsaPublicKey)
         {
-            string path = client_Path[client.Client.RemoteEndPoint.ToString()] + "_File.txt";
+            string ClientEndPoint = client_Path[client.Client.RemoteEndPoint.ToString()];
+            string path = ClientEndPoint + "_File.txt";
             string[] lines = File.ReadAllLines(@"..\resources\" + path);
 
-            if (!message.Contains("Content-Length"))
+            string command = message.Substring(0, message.IndexOf("\r\n"));
+            string[] cfields = command.Split(' ');
+            string request_method = cfields[0];         // METHOD 
+            string resource = cfields[1];
+            string version = cfields[2];
+            string[] AllowedMethods = { "GET", "POST", "DELETE" };
+            string[] NotAllowedMethods = { "CONNECT", "OPTIONS", "PATCH", "TRACE" };
+            if (!message.Contains("Content-length"))
             {
-                DateTime timestamp = DateTime.Now;
-                string info = "Server: C# server\r\n"
-                            + "Content-Type: text/html/json; charset=UTF-8\r\n"
-                            + "Date: " + timestamp.ToString() + "\r\n"
-                            + "Connection: keep-alive\r\n"
-                            + "Content-Language: en\r\n";
+                string info = GenerateInfo();
                 string header = "HTTP/1.1 411 Length Required\r\n" + info + "\r\n";
-                File.WriteAllText(@"..\resources\411.txt", header);
-                EncryptFile(client, @"..\resources\411.txt", rsaPublicKey);
-                SendEncryptedFile(@"..\resources\411.enc", client.GetStream());
+                File.WriteAllText(@"..\resources\" + ClientEndPoint + "_411.txt", header);
+                EncryptFile(client, @"..\resources\"+ ClientEndPoint + "_411.txt", rsaPublicKey);
+                SendEncryptedFile(@"..\resources" + ClientEndPoint + "_411.enc", client.GetStream());
+            }
+            else if (message.Contains("HOST: http://"))
+            {
+                string header = "HTTP/1.1 304 Moved Permanently\r\n"
+                                + "location: https://" + "\r\n"
+                                + "Server: C# server\r\n"
+                                + "Content-Type: text/html/json; charset=UTF-8\r\n"
+                                + "Connection: keep-alive\r\n"
+                                + "Content-Language: en\r\n"
+                                + "\r\n";
+                File.WriteAllText(@"..\resources\" + ClientEndPoint + "_304.txt", header);
+                EncryptFile(client, @"..\resources\" + ClientEndPoint + "_304.txt", rsaPublicKey);
+                SendEncryptedFile(@"..\resources" + ClientEndPoint + "_304.enc", client.GetStream());
+            }
+            else if (!AllowedMethods.Contains(cfields[0]))
+            {
+                string header = "HTTP/1.1 400 Bad Request\r\n"
+                                + "Server: C# server\r\n"
+                                + "Content-Type: text/html/json; charset=UTF-8\r\n"
+                                + "Connection: keep-alive\r\n"
+                                + "Content-Language: en\r\n"
+                                + "\r\n";
+                File.WriteAllText(@"..\resources\" + ClientEndPoint + "_400.txt", header);
+                EncryptFile(client, @"..\resources\" + ClientEndPoint + "_400.txt", rsaPublicKey);
+                SendEncryptedFile(@"..\resources" + ClientEndPoint + "_400.enc", client.GetStream());
+            }
+            else if (!message.Contains("Authorization: Basic "))
+            {
+                string header = "HTTP/1.1 401 Unauthorized\r\n"
+                                + "WWW-Authenticate: Basic realm=\"Access to staging site\r\n\""
+                                + "Server: C# server\r\n"
+                                + "Content-Type: text/html/json; charset=UTF-8\r\n"
+                                + "Connection: keep-alive\r\n"
+                                + "Content-Language: en\r\n"
+                                + "\r\n";
+                File.WriteAllText(@"..\resources\" + ClientEndPoint + "_401.txt", header);
+                EncryptFile(client, @"..\resources\" + ClientEndPoint + "_401.txt", rsaPublicKey);
+                SendEncryptedFile(@"..\resources" + ClientEndPoint + "_401.enc", client.GetStream());
+            }
+            else if (NotAllowedMethods.Contains(cfields[0]))
+            {
+                string header = "HTTP/1.1 405 Method Not Allowed \r\n"
+                                + "ALLOW: GET, POST, PUT\r\n"
+                                + "Server: C# server\r\n"
+                                + "Content-Type: text/html/json; charset=UTF-8\r\n"
+                                + "Connection: keep-alive\r\n"
+                                + "Content-Language: en\r\n"
+                                + "\r\n";
+                File.WriteAllText(@"..\resources\" + ClientEndPoint + "_405.txt", header);
+                EncryptFile(client, @"..\resources\" + ClientEndPoint + "_405.txt", rsaPublicKey);
+                SendEncryptedFile(@"..\resources" + ClientEndPoint + "_405.enc", client.GetStream());
             }
             else
             {
@@ -431,12 +494,7 @@ namespace ServerStudentVer
 
                 }
                 AddMessageToLog(client.Client.RemoteEndPoint + ":\r\n" + message);
-                string command = message.Substring(0, message.IndexOf("\r\n"));
-                string[] cfields = command.Split(' ');
-                string request_method = cfields[0];
-                string resource = cfields[1];
-                string version = cfields[2];
-                MessageBox.Show(resource);
+                
 
                 if (request_method == "GET")
                 {
@@ -444,7 +502,9 @@ namespace ServerStudentVer
                 }
                 else if (request_method == "POST")
                 {
-                    SendMessage(POSTMethod(resource, message, lines), client);
+                    File.WriteAllText(@"..\resources\"+ ClientEndPoint + "_POST.txt", POSTMethod(resource, message, lines));
+                    EncryptFile(client, @"..\resources\" + ClientEndPoint + "_POST.txt", rsaPublicKey);
+                    SendEncryptedFile(@"..\resources\" + ClientEndPoint + "_POST.enc", client.GetStream());
                 }
                 else if (request_method == "DELETE")
                 {
@@ -453,16 +513,6 @@ namespace ServerStudentVer
             }
             
         }
-        private string GenerateInfo()
-        {
-            DateTime timestamp = DateTime.Now;
-            return          
-                "Server: C# server\r\n"
-                + "Content-Type: text/html/json; charset=UTF-8\r\n"
-                + "Date: " + timestamp.ToString() + "\r\n"
-                + "Connection: keep-alive\r\n"
-                + "Content-Language: en\r\n";
-        }
         private string GETMethod(string res)
         {
             string filePath = "../resources" + res;
@@ -470,7 +520,6 @@ namespace ServerStudentVer
             {
                 StreamReader rd = new StreamReader(filePath);
                 string payload = rd.ReadToEnd();
-                DateTime timestamp = DateTime.Now;
                 string info = GenerateInfo();
 
                 string header = "HTTP/1.1 200 OK\r\n" + info + "\r\n";
@@ -486,7 +535,9 @@ namespace ServerStudentVer
         }
         private string POSTMethod(string res, string message, string[] lines)
         {
+            res = "/anhpnh.json";
             string filePath = "../resources" + res;
+            MessageBox.Show(filePath);
             try
             {
                 string body = message.Split(new string[] { "\r\n\r\n" }, StringSplitOptions.None)[1].Trim();
@@ -496,6 +547,7 @@ namespace ServerStudentVer
                 string key = "\"" + a.Split(new string[] { ": " }, StringSplitOptions.None)[0] + "\"";
                 string value = "\"" + a.Split(new string[] { ": " }, StringSplitOptions.None)[1] + "\"";
                 MessageBox.Show(key + ":" + value);
+
                 string data = File.ReadAllText(filePath);
 
                 string data_temp = data.Remove(data.Length - 1, 1).Remove(0, 1).Trim();
@@ -513,7 +565,6 @@ namespace ServerStudentVer
                 }
                 File.WriteAllText(filePath, data);
 
-                DateTime timestamp = DateTime.Now;
                 string info = GenerateInfo();
 
                 string header = "HTTP/1.1 200 OK\r\n" + info + "\r\n";
@@ -569,7 +620,7 @@ namespace ServerStudentVer
             try
             {
                 listener.Start();
-                AddMessageToLog("Server started.");
+                AddMessageToLog("Server started!");
                 Task.Run(() => AcceptClients());
             }
             catch (Exception ex)
