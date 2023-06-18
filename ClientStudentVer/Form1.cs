@@ -408,10 +408,9 @@ namespace ClientStudentVer
             {
                 credentials = Base64Encode(usernameTextBox.Text + '|' + passTextBox.Text);
                 string reqBody = "{\r\n  "
-                                        + "SignIn: " + 1 + ",\r\n"
                                         + usernameTextBox.Text + ": " + passTextBox.Text + "\r\n"
                                         + "}\r\n";
-                string reqHeader = "POST /index.txt" + " HTTP/1.1\r\n" // request line
+                string reqHeader = "POST /login" + " HTTP/1.1\r\n" // request line
                                   // request headers
                                + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
                                + "Content-length: " + reqBody.Length + "\r\n"
@@ -451,10 +450,9 @@ namespace ClientStudentVer
             {
                 credentials = Base64Encode(usernameTextBox.Text + '|' + passTextBox.Text);
                 string reqBody = "{\r\n  "
-                                        + "SignIn: " + 1
                                         + usernameTextBox.Text + ": " + passTextBox.Text + "\r\n"
                                         + "}\r\n";
-                string reqHeader = "POST /index.txt" + " HTTP/1.1\r\n" // request line
+                string reqHeader = "POST /register" + " HTTP/1.1\r\n" // request line
                                                                        // request headers
                                + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
                                + "Content-length: " + reqBody.Length + "\r\n"
@@ -708,15 +706,15 @@ namespace ClientStudentVer
         {
             try
             {
-                string ServerIP = "127.0.0.1";
+                string ServerHostname = "127.0.0.1";
                 int ServerPort = 8089;
 
                 // Create tcp client
                 tcpClient = new TcpClient();
                 // connect to the server socket
-                tcpClient.Connect(ServerIP, ServerPort);
+                tcpClient.Connect(ServerHostname, ServerPort);
                 stream = tcpClient.GetStream();
-                Print_log("Connected to " + ServerIP + ": " + ServerPort);
+                Print_log("Connected to " + ServerHostname + ": " + ServerPort);
 
                 /*KeyValuePair<string, int> endpoint = new KeyValuePair<string, int>(ServerIP, ServerPort);
                 if (serverIP_PortList == null) // first time start the connection
