@@ -53,6 +53,9 @@ namespace ClientStudentVer
             this.webBrowser = new System.Windows.Forms.WebBrowser();
             this.DeleteButton = new System.Windows.Forms.Button();
             this.GetButton = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.SendButton = new System.Windows.Forms.Button();
+            this.MethodComboBox = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // SignInButton
@@ -274,7 +277,7 @@ namespace ClientStudentVer
             // 
             // webBrowser
             // 
-            this.webBrowser.Location = new System.Drawing.Point(461, 342);
+            this.webBrowser.Location = new System.Drawing.Point(461, 354);
             this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser.Name = "webBrowser";
             this.webBrowser.Size = new System.Drawing.Size(1087, 339);
@@ -290,7 +293,6 @@ namespace ClientStudentVer
             this.DeleteButton.Text = "Xóa";
             this.DeleteButton.UseVisualStyleBackColor = true;
             this.DeleteButton.Visible = false;
-            this.DeleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
             // 
             // GetButton
             // 
@@ -302,13 +304,54 @@ namespace ClientStudentVer
             this.GetButton.Text = "Lấy";
             this.GetButton.UseVisualStyleBackColor = true;
             this.GetButton.Visible = false;
-            this.GetButton.Click += new System.EventHandler(this.GetButton_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(466, 319);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(99, 29);
+            this.label2.TabIndex = 42;
+            this.label2.Text = "Render:";
+            // 
+            // SendButton
+            // 
+            this.SendButton.BackColor = System.Drawing.Color.DodgerBlue;
+            this.SendButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SendButton.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.SendButton.Location = new System.Drawing.Point(200, 340);
+            this.SendButton.Name = "SendButton";
+            this.SendButton.Size = new System.Drawing.Size(109, 43);
+            this.SendButton.TabIndex = 44;
+            this.SendButton.Text = "SEND";
+            this.SendButton.UseVisualStyleBackColor = false;
+            this.SendButton.Visible = false;
+            this.SendButton.Click += new System.EventHandler(this.SendButton_Click);
+            // 
+            // MethodComboBox
+            // 
+            this.MethodComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MethodComboBox.FormattingEnabled = true;
+            this.MethodComboBox.Items.AddRange(new object[] {
+            "GET",
+            "HEAD",
+            "DELETE"});
+            this.MethodComboBox.Location = new System.Drawing.Point(81, 343);
+            this.MethodComboBox.Name = "MethodComboBox";
+            this.MethodComboBox.Size = new System.Drawing.Size(120, 37);
+            this.MethodComboBox.TabIndex = 43;
+            this.MethodComboBox.Text = "GET";
+            this.MethodComboBox.Visible = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1560, 864);
+            this.Controls.Add(this.SendButton);
+            this.Controls.Add(this.MethodComboBox);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.GetButton);
             this.Controls.Add(this.DeleteButton);
             this.Controls.Add(this.webBrowser);
@@ -365,6 +408,9 @@ namespace ClientStudentVer
         private System.Windows.Forms.WebBrowser webBrowser;
         private System.Windows.Forms.Button DeleteButton;
         private System.Windows.Forms.Button GetButton;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button SendButton;
+        private System.Windows.Forms.ComboBox MethodComboBox;
     }
 }
 

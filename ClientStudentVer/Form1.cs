@@ -329,19 +329,20 @@ namespace ClientStudentVer
         }
         private void SignInButton_Clicked()
         {
-            DeleteButton.Enabled = true;
-            SignUpButton.Enabled = false;
-            SignInButton.Enabled = false;
+            
+            string dumb = "";
+            VisibleComboBox(dumb);
+            VisibleSendButton(dumb);
             /*SignOutButton.Enabled = true;
             SignOutButton.Visible = true;
             UpdateButt.Enabled = true;
             UpdateButt.Visible = true;*/
-            DeliLabel.Visible = true;
+            // DeliLabel.Visible = true;
             /*NameTextBox.Visible = true;
             DepartTextBox.Visible = true;
             SexTextBox.Visible = true;*/
 
-            label7.Visible = true;
+            // label7.Visible = true;
 
             /*label1.Visible = true;            
             label6.Visible = true;
@@ -371,8 +372,6 @@ namespace ClientStudentVer
         {
             Buttons_NotClicked();
             SignInButton.Enabled = true;
-            SignUpButton.Enabled = true;
-            SignUpButton.Visible = true;
         }
         private void Buttons_NotClicked()
         {
@@ -384,7 +383,6 @@ namespace ClientStudentVer
             label7.Visible = false;
             label6.Visible = false;
             label4.Visible = false;
-            DeliLabel.Visible = false;
             NameTextBox.Visible = false;
             DepartTextBox.Visible = false;
             SexTextBox.Visible = false;
@@ -522,10 +520,10 @@ namespace ClientStudentVer
             SendEncryptedFile(@"..\resources\GET.enc");
         }
 
-        private void DeleteButton_Click(object sender, EventArgs e)
+        private void DeleteButton_Click()
         {
             string reqBody = "";
-            string reqHeader = "DELETE /index.txt" + " HTTP/1.1\r\n" // request line
+            string reqHeader = "DELETE /index2.txt" + " HTTP/1.1\r\n" // request line
                                                                      // request headers
                            + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
                            + "Content-length: " + reqBody.Length + "\r\n"
@@ -544,11 +542,32 @@ namespace ClientStudentVer
             SendEncryptedFile(@"..\resources\POST.enc");
         }
 
-        private void GetButton_Click(object sender, EventArgs e)
+        private void GetButton_Click()
         {
             string reqBody = "";
             string reqHeader = "GET /index2.txt" + " HTTP/1.1\r\n" // request line
                                                                      // request headers
+                           + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
+                           + "Content-length: " + reqBody.Length + "\r\n"
+                           + "Authorization: Basic " + credentials + "\r\n"
+                           + "Content-type: application/json\r\n"
+                           + "Connection: keep-alive \r\n"
+                           + "Upgrade-Insecure-Requests: 1\r\n"
+                           + "User-Agent: C# client\r\n"
+                           + "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\n"
+                           + "Accept-Encoding: gzip, deflate\r\n"
+                           + "Accept-Language: en-US,en;q=0.9\r\n"
+                           + "\r\n";
+
+            File.WriteAllText(@"..\resources\POST.txt", reqHeader + reqBody);
+            EncryptFile(@"..\resources\POST.txt", PublicKey);
+            SendEncryptedFile(@"..\resources\POST.enc");
+        }
+        private void HeadButton_Click()
+        {
+            string reqBody = "";
+            string reqHeader = "HEAD /index2.txt" + " HTTP/1.1\r\n" // request line
+                                                                   // request headers
                            + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
                            + "Content-length: " + reqBody.Length + "\r\n"
                            + "Authorization: Basic " + credentials + "\r\n"
@@ -575,6 +594,42 @@ namespace ClientStudentVer
                 return;
             }
             LogTextBox.AppendText(log + Environment.NewLine);
+        }
+        private void DisableSignUpButton(string s)
+        {
+            if (SignUpButton.InvokeRequired)
+            {
+                SignUpButton.Invoke(new Action<string>(DisableSignUpButton), s);
+                return;
+            }
+            SignUpButton.Enabled = false;
+        }
+        private void VisibleComboBox(string s)
+        {
+            if (MethodComboBox.InvokeRequired)
+            {
+                MethodComboBox.Invoke(new Action<string>(VisibleComboBox), s);
+                return;
+            }
+            MethodComboBox.Visible = true;
+        }
+        private void VisibleSendButton(string s)
+        {
+            if (SendButton.InvokeRequired)
+            {
+                SendButton.Invoke(new Action<string>(VisibleSendButton), s);
+                return;
+            }
+            SendButton.Visible = true;
+        }
+        private void DisableSignInButton(string s)
+        {
+            if (SignInButton.InvokeRequired)
+            {
+                SignInButton.Invoke(new Action<string>(DisableSignInButton), s);
+                return;
+            }
+            SignInButton.Enabled = false;
         }
         private int HandleResponseHeader(string headers)
         {
@@ -659,17 +714,11 @@ namespace ClientStudentVer
             int Errorflag = HandleResponseHeader(resp_items[0]);
             if (Errorflag == 0)
             {
-                if (!resp_items[1].Contains(':'))
-                {   // repsonse for logout
-                    var a = 1;
-                }
-                else
-                {
-                    Print_body(resp_items[1]);
-                    SignInButton_Clicked();
-                }
+                SignInButton_Clicked();
+                Print_body(resp_items[1]);
 
             }
+            sr.Close();
         }
         private void Print_body(string body)
         {
@@ -774,6 +823,33 @@ namespace ClientStudentVer
         {
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
             return System.Convert.ToBase64String(plainTextBytes);
+        }
+
+        private void SendButton_Click(object sender, EventArgs e)
+        {
+            switch (MethodComboBox.Text)
+            {
+                case "GET":
+                    {
+                        GetButton_Click();
+                    }
+                    break;
+                case "DELETE":
+                    {
+                        DeleteButton_Click();
+                    }
+                    break;
+                case "HEAD":
+                    {
+                        HeadButton_Click();
+                    }
+                    break;
+                default:
+                    {
+                        MessageBox.Show("HTTP Method Not Found!");
+                    }
+                    break;
+            }
         }
         public static string Base64Decode(string base64EncodedData)
         {
