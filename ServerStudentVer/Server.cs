@@ -13,15 +13,18 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Data.SqlClient;
+
 namespace ServerStudentVer
 {
     public partial class Server : Form
     {
         TcpListener listener;
         List<TcpClient> clients;
-        static Dictionary<string, byte[]> client_sessionKeys ;   // string: Client-IPEndPoint, byte: AES key
+        static Dictionary<string, byte[]> client_sessionKeys;   // string: Client-IPEndPoint, byte: AES key
         static Dictionary<string, byte[]> client_sessionIVs;     // string: Client-IPEndPoint, byte: AES IV
         static Dictionary<string, string> client_Path;
+
         // Cert-related folders and components
         static string CertPath = "..\\resources\\QuanNN.crt";
         static string PrivateKeyCertPath = "..\\resources\\key.pfx";
@@ -31,9 +34,14 @@ namespace ServerStudentVer
         static string encryptedFile = @"File.enc";
         static string EncryptedSymmectricKeyPath = @"..\resources\Key.enc";
         static string decryptedFile = @"..\resources\File.txt";
+
         // Load 2 certs (1 file .pfx for priv key and 1 file .crt for public key)
         X509Certificate2 cert;
         X509Certificate2 cert2;
+
+        //User file
+        const string filePath = "../resources/users.txt";
+
         public Server()
         {
             clients = new List<TcpClient>();
@@ -152,7 +160,7 @@ namespace ServerStudentVer
 
                 // Use FileStream objects to read the encrypted
                 // file (inFs) and save the decrypted file (outFs).
-                using (FileStream inFs = new FileStream(@"..\resources\" + ClientEndPoint +"_File.enc", FileMode.Open))
+                using (FileStream inFs = new FileStream(@"..\resources\" + ClientEndPoint + "_File.enc", FileMode.Open))
                 {
 
                     inFs.Seek(0, SeekOrigin.Begin);
@@ -186,10 +194,10 @@ namespace ServerStudentVer
                     inFs.Read(IV, 0, lenIV);
                     Directory.CreateDirectory(decrFolder);
 
-                    
+
                     // Use RSA
                     // to decrypt the Aes key.
-                    byte[] KeyDecrypted =  rsaPrivateKey.Decrypt(KeyEncrypted, RSAEncryptionPadding.Pkcs1);
+                    byte[] KeyDecrypted = rsaPrivateKey.Decrypt(KeyEncrypted, RSAEncryptionPadding.Pkcs1);
 
                     if (Encoding.UTF8.GetString(KeyDecrypted) == Encoding.UTF8.GetString(client_sessionKeys[client.Client.RemoteEndPoint.ToString()]))
                     {
@@ -201,7 +209,7 @@ namespace ServerStudentVer
                             // from the FileSteam of the encrypted
                             // file (inFs) into the FileStream
                             // for the decrypted file (outFs).
-                            using (FileStream outFs = new FileStream(@"..\resources\"+ ClientEndPoint + "_File.txt", FileMode.Create))
+                            using (FileStream outFs = new FileStream(@"..\resources\" + ClientEndPoint + "_File.txt", FileMode.Create))
                             {
 
                                 int count = 0;
@@ -233,7 +241,7 @@ namespace ServerStudentVer
                             inFs.Close();
                         }
                     }
-                    
+
                 }
             }
         }
@@ -278,7 +286,7 @@ namespace ServerStudentVer
             AddMessageToLog("The key of " + client.Client.RemoteEndPoint.ToString() + "is received.");
 
             // Save the client key to client_IPEndPoint's folder
-            FileStream fs = new FileStream(@"..\resources\"+ ClientEndPoint+"_Key.enc", FileMode.Create);
+            FileStream fs = new FileStream(@"..\resources\" + ClientEndPoint + "_Key.enc", FileMode.Create);
             fs.Write(KeyBuffer, 0, bufferLen);
             fs.Close();
             AddMessageToLog("Save the encrypted key to a folder.");
@@ -324,7 +332,7 @@ namespace ServerStudentVer
             {
                 aes.KeySize = 256;
                 aes.Mode = CipherMode.CBC;
-                
+
                 // Create byte arrays to get the length of
                 // the encrypted key and IV.
                 // These values were stored as 4 bytes each
@@ -334,10 +342,10 @@ namespace ServerStudentVer
 
                 // Use FileStream objects to read the encrypted
                 // semetric key (inFs) and save the decrypted file (outFs).
-                
+
                 using (FileStream inFs = new FileStream(@"..\resources\" + ClientEndPoint + "_Key.enc", FileMode.Open))
                 {
-                    
+
                     inFs.Seek(0, SeekOrigin.Begin);
                     inFs.Seek(0, SeekOrigin.Begin);
                     inFs.Read(LenK, 0, 3);
@@ -391,11 +399,11 @@ namespace ServerStudentVer
         }
         private void ReceiveClientKey()
         {
-             
+
         }
         private void SendCert(TcpClient client)
         {
-            
+
             StreamReader sr = new StreamReader(CertPath); // create a stream reader file from OpenFileDialog
 
             // Send the signature to server
@@ -404,16 +412,6 @@ namespace ServerStudentVer
             stream.Write(CertByte, 0, CertByte.Length);
             stream.Flush();
             AddMessageToLog("Send cert to " + client.Client.RemoteEndPoint.ToString());
-        }
-        private string GenerateInfo()
-        {
-            DateTime timestamp = DateTime.Now;
-            return
-                "Server: C# server\r\n"
-                + "Content-Type: text/html/json; charset=UTF-8\r\n"
-                + "Date: " + timestamp.ToString() + "\r\n"
-                + "Connection: keep-alive\r\n"
-                + "Content-Language: en\r\n";
         }
         private void HandleMessage(string message, TcpClient client, RSA rsaPublicKey)
         {
@@ -426,17 +424,17 @@ namespace ServerStudentVer
             string request_method = cfields[0];         // METHOD 
             string resource = cfields[1];
             string version = cfields[2];
-            string[] AllowedMethods = { "GET", "POST", "DELETE" };
+            string[] AllowedMethods = { "GET", "POST", "DELETE", "HEAD" };
             string[] NotAllowedMethods = { "CONNECT", "OPTIONS", "PATCH", "TRACE" };
             if (!message.Contains("Content-length"))
             {
                 string info = GenerateInfo();
                 string header = "HTTP/1.1 411 Length Required\r\n" + info + "\r\n";
                 File.WriteAllText(@"..\resources\" + ClientEndPoint + "_411.txt", header);
-                EncryptFile(client, @"..\resources\"+ ClientEndPoint + "_411.txt", rsaPublicKey);
-                SendEncryptedFile(@"..\resources" + ClientEndPoint + "_411.enc", client.GetStream());
+                EncryptFile(client, @"..\resources\" + ClientEndPoint + "_411.txt", rsaPublicKey);
+                SendEncryptedFile(@"..\resources\" + ClientEndPoint + "_411.enc", client.GetStream());
             }
-            else if (message.Contains("HOST: http://"))
+            else if (message.Contains("Host: http://"))
             {
                 string header = "HTTP/1.1 304 Moved Permanently\r\n"
                                 + "location: https://" + "\r\n"
@@ -447,7 +445,7 @@ namespace ServerStudentVer
                                 + "\r\n";
                 File.WriteAllText(@"..\resources\" + ClientEndPoint + "_304.txt", header);
                 EncryptFile(client, @"..\resources\" + ClientEndPoint + "_304.txt", rsaPublicKey);
-                SendEncryptedFile(@"..\resources" + ClientEndPoint + "_304.enc", client.GetStream());
+                SendEncryptedFile(@"..\resources\" + ClientEndPoint + "_304.enc", client.GetStream());
             }
             else if (!AllowedMethods.Contains(cfields[0]))
             {
@@ -459,7 +457,7 @@ namespace ServerStudentVer
                                 + "\r\n";
                 File.WriteAllText(@"..\resources\" + ClientEndPoint + "_400.txt", header);
                 EncryptFile(client, @"..\resources\" + ClientEndPoint + "_400.txt", rsaPublicKey);
-                SendEncryptedFile(@"..\resources" + ClientEndPoint + "_400.enc", client.GetStream());
+                SendEncryptedFile(@"..\resources\" + ClientEndPoint + "_400.enc", client.GetStream());
             }
             else if (!message.Contains("Authorization: Basic "))
             {
@@ -472,7 +470,7 @@ namespace ServerStudentVer
                                 + "\r\n";
                 File.WriteAllText(@"..\resources\" + ClientEndPoint + "_401.txt", header);
                 EncryptFile(client, @"..\resources\" + ClientEndPoint + "_401.txt", rsaPublicKey);
-                SendEncryptedFile(@"..\resources" + ClientEndPoint + "_401.enc", client.GetStream());
+                SendEncryptedFile(@"..\resources\" + ClientEndPoint + "_401.enc", client.GetStream());
             }
             else if (NotAllowedMethods.Contains(cfields[0]))
             {
@@ -485,33 +483,39 @@ namespace ServerStudentVer
                                 + "\r\n";
                 File.WriteAllText(@"..\resources\" + ClientEndPoint + "_405.txt", header);
                 EncryptFile(client, @"..\resources\" + ClientEndPoint + "_405.txt", rsaPublicKey);
-                SendEncryptedFile(@"..\resources" + ClientEndPoint + "_405.enc", client.GetStream());
+                SendEncryptedFile(@"..\resources\" + ClientEndPoint + "_405.enc", client.GetStream());
             }
             else
             {
-                foreach (string line in lines)
-                {
-
-                }
                 AddMessageToLog(client.Client.RemoteEndPoint + ":\r\n" + message);
-                
-
                 if (request_method == "GET")
                 {
-                    SendMessage(GETMethod(resource), client);
+                    SendMessage(GETMethod(resource), client, rsaPublicKey);
                 }
                 else if (request_method == "POST")
                 {
-                    File.WriteAllText(@"..\resources\"+ ClientEndPoint + "_POST.txt", POSTMethod(resource, message, lines));
-                    EncryptFile(client, @"..\resources\" + ClientEndPoint + "_POST.txt", rsaPublicKey);
-                    SendEncryptedFile(@"..\resources\" + ClientEndPoint + "_POST.enc", client.GetStream());
+                    SendMessage(POSTMethod(resource, message), client, rsaPublicKey);
                 }
                 else if (request_method == "DELETE")
                 {
-                    SendMessage(DELETEMethod(resource), client);
+                    SendMessage(DELETEMethod(resource), client, rsaPublicKey);
+                }
+                else if (request_method == "HEAD")
+                {
+                    SendMessage(HEADMethod(resource), client, rsaPublicKey);
                 }
             }
-            
+        }
+
+        private string GenerateInfo()
+        {
+            DateTime timestamp = DateTime.Now;
+            return
+                "Server: C# server\r\n"
+                + "Content-Type: text/html/json; charset=UTF-8\r\n"
+                + "Date: " + timestamp.ToString() + "\r\n"
+                + "Connection: keep-alive\r\n"
+                + "Content-Language: en\r\n\r\n";
         }
         private string GETMethod(string res)
         {
@@ -520,9 +524,10 @@ namespace ServerStudentVer
             {
                 StreamReader rd = new StreamReader(filePath);
                 string payload = rd.ReadToEnd();
+
                 string info = GenerateInfo();
 
-                string header = "HTTP/1.1 200 OK\r\n" + info + "\r\n";
+                string header = "HTTP/1.1 200 OK\r\n" + info;
                 return header + payload;
             }
             catch (Exception ex)
@@ -530,44 +535,19 @@ namespace ServerStudentVer
                 Console.WriteLine("An error occurred while reading the file: " + ex.Message);
                 return "HTTP/1.1 404 Not Found\r\n"
                         + "Content-Type: text/html; charset=UTF-8\r\n"
-                        + "Date: " + DateTime.Now.ToString() + "\r\n";
+                        + "Date: " + DateTime.Now.ToString() + "\r\n\r\n";
             }
         }
-        private string POSTMethod(string res, string message, string[] lines)
+
+        private string HEADMethod(string res)
         {
-            res = "/anhpnh.json";
             string filePath = "../resources" + res;
-            MessageBox.Show(filePath);
             try
             {
-                string body = message.Split(new string[] { "\r\n\r\n" }, StringSplitOptions.None)[1].Trim();
-
-                string a = body.Remove(body.Length - 1, 1).Remove(0, 1).Trim();
-
-                string key = "\"" + a.Split(new string[] { ": " }, StringSplitOptions.None)[0] + "\"";
-                string value = "\"" + a.Split(new string[] { ": " }, StringSplitOptions.None)[1] + "\"";
-                MessageBox.Show(key + ":" + value);
-
-                string data = File.ReadAllText(filePath);
-
-                string data_temp = data.Remove(data.Length - 1, 1).Remove(0, 1).Trim();
-
-                string[] data_pair = data_temp.Split(new string[] { ",\r\n" }, StringSplitOptions.None);
-
-                foreach (string pair in data_pair)
-                {
-                    string temp_key = pair.Split(new string[] { ": " }, StringSplitOptions.None)[0].Trim();
-                    string temp_value = pair.Split(new string[] { ": " }, StringSplitOptions.None)[1].Trim();
-                    if (temp_key == key)
-                    {
-                        data = data.Replace(temp_value, value);
-                    }
-                }
-                File.WriteAllText(filePath, data);
-
+                StreamReader rd = new StreamReader(filePath);
                 string info = GenerateInfo();
 
-                string header = "HTTP/1.1 200 OK\r\n" + info + "\r\n";
+                string header = "HTTP/1.1 200 OK\r\n" + info;
                 return header;
             }
             catch (Exception ex)
@@ -575,34 +555,176 @@ namespace ServerStudentVer
                 Console.WriteLine("An error occurred while reading the file: " + ex.Message);
                 return "HTTP/1.1 404 Not Found\r\n"
                         + "Content-Type: text/html; charset=UTF-8\r\n"
-                        + "Date: " + DateTime.Now.ToString() + "\r\n";
+                        + "Date: " + DateTime.Now.ToString() + "\r\n\r\n";
+            }
+        }
+
+        static string Register(string username, string password)
+        {
+            try
+            {
+                if (IsUsernameTaken(username))
+                {
+                    return "409 Conflict\r\n";
+                }
+
+                string userRecord = $"{username},{password}";
+
+                using (StreamWriter writer = new StreamWriter(filePath, true))
+                {
+                    writer.WriteLine(userRecord);
+                }
+                return "201 Created\r\n";
+            }
+            catch
+            {
+                return "500 Internal Server Error\r\n";
+            }
+        }
+
+        static string Login(string username, string password)
+        {
+            try
+            {
+                if (IsLoginValid(username, password))
+                {
+                    return "200 OK\r\n";
+                }
+                else
+                {
+                    return "401 Unauthorized\r\n";
+                }
+            }
+            catch
+            {
+                return "500 Internal Server Error\r\n";
+            }
+        }
+
+        static bool IsUsernameTaken(string username)
+        {
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    string[] parts = line.Split(new[] { ',' }, 2);
+                    if (parts.Length == 2 && parts[0] == username)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        static bool IsLoginValid(string username, string password)
+        {
+            if (File.Exists(filePath))
+            {
+                using (StreamReader reader = new StreamReader(filePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        string[] parts = line.Split(new[] { ',' }, 2);
+                        if (parts.Length == 2 && parts[0] == username && parts[1] == password)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private string POSTMethod(string res, string message)
+        {
+            if (res.Contains("register"))
+            {
+                string body = message.Split(new string[] { "\r\n\r\n" }, StringSplitOptions.None)[1].Trim();
+                string a = body.Remove(body.Length - 1, 1).Remove(0, 1).Trim();
+
+                string key = a.Split(new string[] { ": " }, StringSplitOptions.None)[0];
+                string value = a.Split(new string[] { ": " }, StringSplitOptions.None)[1];
+                return "HTTP/1.1 " + Register(key, value) + GenerateInfo();
+            }
+
+            else if (res.Contains("login"))
+            {
+                string body = message.Split(new string[] { "\r\n\r\n" }, StringSplitOptions.None)[1].Trim();
+                string a = body.Remove(body.Length - 1, 1).Remove(0, 1).Trim();
+
+                string key = a.Split(new string[] { ": " }, StringSplitOptions.None)[0];
+                string value = a.Split(new string[] { ": " }, StringSplitOptions.None)[1];
+                return "HTTP/1.1 " + Login(key, value) + GenerateInfo();
+            }
+            else
+            {
+                string filePath = "../resources" + res;
+                try
+                {
+                    string body = message.Split(new string[] { "\r\n\r\n" }, StringSplitOptions.None)[1].Trim();
+                    string a = body.Remove(body.Length - 1, 1).Remove(0, 1).Trim();
+
+                    string key = "\"" + a.Split(new string[] { ": " }, StringSplitOptions.None)[0] + "\"";
+                    string value = "\"" + a.Split(new string[] { ": " }, StringSplitOptions.None)[1] + "\"";
+                    string data = File.ReadAllText(filePath);
+
+                    string data_temp = data.Remove(data.Length - 1, 1).Remove(0, 1).Trim();
+
+                    string[] data_pair = data_temp.Split(new string[] { ",\r\n" }, StringSplitOptions.None);
+
+                    foreach (string pair in data_pair)
+                    {
+                        string temp_key = pair.Split(new string[] { ": " }, StringSplitOptions.None)[0].Trim();
+                        string temp_value = pair.Split(new string[] { ": " }, StringSplitOptions.None)[1].Trim();
+                        if (temp_key == key)
+                        {
+                            data = data.Replace(temp_value, value);
+                        }
+                    }
+                    File.WriteAllText(filePath, data);
+                    string info = GenerateInfo();
+
+                    string header = "HTTP/1.1 200 OK\r\n" + info + "\r\n";
+                    return header;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("An error occurred while reading the file: " + ex.Message);
+                    return "HTTP/1.1 404 Not Found\r\n"
+                            + "Content-Type: text/html; charset=UTF-8\r\n"
+                            + "Date: " + DateTime.Now.ToString() + "\r\n\r\n";
+                }
             }
         }
 
         private string DELETEMethod(string res)
         {
             string filePath = "../resources" + res;
-            try
+            if (File.Exists(filePath))
             {
                 File.Delete(filePath);
                 string payload = "<html><body><h1>File deleted.</h1></body></html>";
                 string info = GenerateInfo();
-                string header = "HTTP/1.1 200 OK\r\n" + info + "\r\n";
+                string header = "HTTP/1.1 200 OK\r\n" + info;
                 return header + payload;
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("An error occurred while reading the file: " + ex.Message);
-                return "HTTP/1.1 404 Not Found\r\n"
+                return "HTTP/1.1 204 No Content\r\n"
                         + "Content-Type: text/html; charset=UTF-8\r\n"
-                        + "Date: " + DateTime.Now.ToString() + "\r\n";
+                        + "Date: " + DateTime.Now.ToString() + "\r\n\r\n";
             }
         }
-        private void SendMessage(string message, TcpClient client)
+        private void SendMessage(string message, TcpClient client, RSA pubkey)
         {
-            byte[] bytes = Encoding.ASCII.GetBytes(message + "\r\n");
-            NetworkStream stream = client.GetStream();
-            stream.Write(bytes, 0, bytes.Length);
+            string path = client_Path[client.Client.RemoteEndPoint.ToString()];
+            File.WriteAllText(@"..\resources\" + path + ".txt", message);
+            EncryptFile(client, @"..\resources\" + path + ".txt", pubkey);
+            SendEncryptedFile(@"..\resources\" + path + ".enc", client.GetStream());
         }
 
         private void AddMessageToLog(string message)
