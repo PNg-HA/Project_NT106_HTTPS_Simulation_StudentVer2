@@ -20,3 +20,26 @@ D:\Move\UIT\HK4\LTM\Project\StudentVer\ClientStudentVer\obj\Debug\ClientStudentV
 D:\Move\UIT\HK4\LTM\Project\StudentVer\ClientStudentVer\obj\Debug\ClientStudentVer.csproj.CoreCompileInputs.cache
 D:\Move\UIT\HK4\LTM\Project\StudentVer\ClientStudentVer\obj\Debug\ClientStudentVer.exe
 D:\Move\UIT\HK4\LTM\Project\StudentVer\ClientStudentVer\obj\Debug\ClientStudentVer.pdb
+C:\study\LTMCB\project_latest\Project_NT106_HTTPS_Simulation_StudentVer2\ClientStudentVer\bin\Debug\ClientStudentVer.exe.config
+C:\study\LTMCB\project_latest\Project_NT106_HTTPS_Simulation_StudentVer2\ClientStudentVer\bin\Debug\ClientStudentVer.exe
+C:\study\LTMCB\project_latest\Project_NT106_HTTPS_Simulation_StudentVer2\ClientStudentVer\bin\Debug\ClientStudentVer.pdb
+C:\study\LTMCB\project_latest\Project_NT106_HTTPS_Simulation_StudentVer2\ClientStudentVer\obj\Debug\ClientStudentVer.csproj.AssemblyReference.cache
+C:\study\LTMCB\project_latest\Project_NT106_HTTPS_Simulation_StudentVer2\ClientStudentVer\obj\Debug\ClientStudentVer.csproj.SuggestedBindingRedirects.cache
+C:\study\LTMCB\project_latest\Project_NT106_HTTPS_Simulation_StudentVer2\ClientStudentVer\obj\Debug\ClientStudentVer.Form1.resources
+C:\study\LTMCB\project_latest\Project_NT106_HTTPS_Simulation_StudentVer2\ClientStudentVer\obj\Debug\ClientStudentVer.Properties.Resources.resources
+C:\study\LTMCB\project_latest\Project_NT106_HTTPS_Simulation_StudentVer2\ClientStudentVer\obj\Debug\ClientStudentVer.StudentInfo.resources
+C:\study\LTMCB\project_latest\Project_NT106_HTTPS_Simulation_StudentVer2\ClientStudentVer\obj\Debug\ClientStudentVer.csproj.GenerateResource.cache
+C:\study\LTMCB\project_latest\Project_NT106_HTTPS_Simulation_StudentVer2\ClientStudentVer\obj\Debug\ClientStudentVer.csproj.CoreCompileInputs.cache
+C:\study\LTMCB\project_latest\Project_NT106_HTTPS_Simulation_StudentVer2\ClientStudentVer\obj\Debug\ClientStudentVer.exe
+C:\study\LTMCB\project_latest\Project_NT106_HTTPS_Simulation_StudentVer2\ClientStudentVer\obj\Debug\ClientStudentVer.pdb
+C:\Users\Hai Anh\Downloads\ltmcb_latest-main\ltmcb_latest-main\ClientStudentVer\bin\Debug\ClientStudentVer.exe.config
+C:\Users\Hai Anh\Downloads\ltmcb_latest-main\ltmcb_latest-main\ClientStudentVer\bin\Debug\ClientStudentVer.exe
+C:\Users\Hai Anh\Downloads\ltmcb_latest-main\ltmcb_latest-main\ClientStudentVer\bin\Debug\ClientStudentVer.pdb
+C:\Users\Hai Anh\Downloads\ltmcb_latest-main\ltmcb_latest-main\ClientStudentVer\obj\Debug\ClientStudentVer.csproj.AssemblyReference.cache
+C:\Users\Hai Anh\Downloads\ltmcb_latest-main\ltmcb_latest-main\ClientStudentVer\obj\Debug\ClientStudentVer.Form1.resources
+C:\Users\Hai Anh\Downloads\ltmcb_latest-main\ltmcb_latest-main\ClientStudentVer\obj\Debug\ClientStudentVer.Properties.Resources.resources
+C:\Users\Hai Anh\Downloads\ltmcb_latest-main\ltmcb_latest-main\ClientStudentVer\obj\Debug\ClientStudentVer.StudentInfo.resources
+C:\Users\Hai Anh\Downloads\ltmcb_latest-main\ltmcb_latest-main\ClientStudentVer\obj\Debug\ClientStudentVer.csproj.GenerateResource.cache
+C:\Users\Hai Anh\Downloads\ltmcb_latest-main\ltmcb_latest-main\ClientStudentVer\obj\Debug\ClientStudentVer.csproj.CoreCompileInputs.cache
+C:\Users\Hai Anh\Downloads\ltmcb_latest-main\ltmcb_latest-main\ClientStudentVer\obj\Debug\ClientStudentVer.exe
+C:\Users\Hai Anh\Downloads\ltmcb_latest-main\ltmcb_latest-main\ClientStudentVer\obj\Debug\ClientStudentVer.pdb

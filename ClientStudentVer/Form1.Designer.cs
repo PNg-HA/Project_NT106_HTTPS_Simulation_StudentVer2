@@ -54,24 +54,28 @@ namespace ClientStudentVer
             // 
             // SignInButton
             // 
-            this.SignInButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.SignInButton.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.SignInButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.SignInButton.ForeColor = System.Drawing.SystemColors.HighlightText;
             this.SignInButton.Location = new System.Drawing.Point(98, 196);
             this.SignInButton.Name = "SignInButton";
-            this.SignInButton.Size = new System.Drawing.Size(116, 46);
+            this.SignInButton.Size = new System.Drawing.Size(129, 46);
             this.SignInButton.TabIndex = 2;
             this.SignInButton.Text = "Đăng nhập";
-            this.SignInButton.UseVisualStyleBackColor = true;
+            this.SignInButton.UseVisualStyleBackColor = false;
             this.SignInButton.Click += new System.EventHandler(this.SignInButton_Click);
             // 
             // SignUpButton
             // 
-            this.SignUpButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.SignUpButton.Location = new System.Drawing.Point(233, 196);
+            this.SignUpButton.BackColor = System.Drawing.Color.MediumSeaGreen;
+            this.SignUpButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.SignUpButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.SignUpButton.Location = new System.Drawing.Point(226, 196);
             this.SignUpButton.Name = "SignUpButton";
-            this.SignUpButton.Size = new System.Drawing.Size(112, 46);
+            this.SignUpButton.Size = new System.Drawing.Size(119, 46);
             this.SignUpButton.TabIndex = 3;
             this.SignUpButton.Text = "Đăng ký";
-            this.SignUpButton.UseVisualStyleBackColor = true;
+            this.SignUpButton.UseVisualStyleBackColor = false;
             this.SignUpButton.Click += new System.EventHandler(this.SignUpButton_Click);
             // 
             // usernameTextBox
@@ -101,7 +105,7 @@ namespace ClientStudentVer
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(853, 35);
+            this.label5.Location = new System.Drawing.Point(813, 35);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(85, 29);
             this.label5.TabIndex = 23;
@@ -112,7 +116,7 @@ namespace ClientStudentVer
             this.statusLabel.AutoSize = true;
             this.statusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.statusLabel.ForeColor = System.Drawing.Color.ForestGreen;
-            this.statusLabel.Location = new System.Drawing.Point(934, 35);
+            this.statusLabel.Location = new System.Drawing.Point(894, 35);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(222, 29);
             this.statusLabel.TabIndex = 22;

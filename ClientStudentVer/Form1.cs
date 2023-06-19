@@ -330,7 +330,7 @@ namespace ClientStudentVer
         }
         private void DeleteButton_Click()
         {
-            string reqHeader = "DELETE /index2.txt" + " HTTP/1.1\r\n" // request line
+            string reqHeader = "DELETE /test" + " HTTP/1.1\r\n" // request line
                                                                       // request headers
                            + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
                            + "Content-length: 0" + "\r\n"
@@ -525,10 +525,6 @@ namespace ClientStudentVer
             {
                 RespHeadTextBox.Invoke(new Action<string>(Print_body), body);
                 return;
-            }
-            if (body == "")
-            {
-                MessageBox.Show("Empty");
             }
             webBrowser.DocumentText = body;
         }
