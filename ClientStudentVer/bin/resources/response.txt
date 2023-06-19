@@ -1,6 +1,7 @@
-HTTP/1.1 400 Bad Request
+HTTP/1.1 200 OK
 Server: C# server
 Content-Type: text/html/json; charset=UTF-8
+Date: 6/19/2023 12:25:42 PM
 Connection: keep-alive
 Content-Language: en
 

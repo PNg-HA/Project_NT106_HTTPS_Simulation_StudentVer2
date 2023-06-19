@@ -45,6 +45,7 @@ namespace ClientStudentVer
         X509Certificate2 cert;
         static byte[] ClientSessionKey, ClientIV;
         static string credentials;
+        static int SignInFlag;
         public Form1()
         {
             InitializeComponent();
@@ -329,8 +330,10 @@ namespace ClientStudentVer
         }
         private void SignInButton_Clicked()
         {
-            
+
             string dumb = "";
+            DisableSignInButton(dumb);
+            DisableSignUpButton(dumb);
             VisibleComboBox(dumb);
             VisibleSendButton(dumb);
             /*SignOutButton.Enabled = true;
@@ -350,7 +353,6 @@ namespace ClientStudentVer
         }
         private void SignUpButton_Clicked()
         {
-            DeleteButton.Enabled = true;
             SignUpButton.Enabled = false;
             SignInButton.Enabled = false;
             /*SignOutButton.Enabled = true;
@@ -362,7 +364,6 @@ namespace ClientStudentVer
             DepartTextBox.Visible = true;
             SexTextBox.Visible = true;*/
 
-            label7.Visible = true;
 
             /*label1.Visible = true;            
             label6.Visible = true;
@@ -379,13 +380,6 @@ namespace ClientStudentVer
             SignOutButton.Visible = false;
             UpdateButt.Enabled = false;
             UpdateButt.Visible = false;
-            label1.Visible = false;
-            label7.Visible = false;
-            label6.Visible = false;
-            label4.Visible = false;
-            NameTextBox.Visible = false;
-            DepartTextBox.Visible = false;
-            SexTextBox.Visible = false;
             FinishSignUpButt.Enabled = false;
             FinishSignUpButt.Visible = false;
         }
@@ -476,13 +470,6 @@ namespace ClientStudentVer
             SignOutButton.Visible = false;
             UpdateButt.Visible = true;
             UpdateButt.Enabled = true;
-            label1.Visible = true;
-            label7.Visible = true;
-            label6.Visible = true;
-            label4.Visible = true;
-            NameTextBox.Visible = true;
-            DepartTextBox.Visible = true;
-            SexTextBox.Visible = true;
             FinishSignUpButt.Enabled = true;
             FinishSignUpButt.Visible = true;
         }
@@ -764,42 +751,6 @@ namespace ClientStudentVer
                 tcpClient.Connect(ServerHostname, ServerPort);
                 stream = tcpClient.GetStream();
                 Print_log("Connected to " + ServerHostname + ": " + ServerPort);
-
-                /*KeyValuePair<string, int> endpoint = new KeyValuePair<string, int>(ServerIP, ServerPort);
-                if (serverIP_PortList == null) // first time start the connection
-                {
-                    // Create tcp client
-                    tcpClient = new TcpClient();
-
-                    // connect to the server socket
-                    serverIP_PortList.Add(new KeyValuePair<string, int>(ServerIP, ServerPort));
-                    tcpClient.Connect(ServerIP, ServerPort);
-                    stream = tcpClient.GetStream();
-                    LogTextBox.AppendText("Connected to " + ServerIP + ": " + ServerPort);
-                }
-                else // Check whether connection is existed
-                {
-                    foreach (var element in serverIP_PortList)
-                    {
-                        if (endpoint.Key == element.Key && endpoint.Value == element.Value)
-                        {
-                            already_TCPconnected_flag = 1;
-                            break;
-                        }
-                    }
-                    if (already_TCPconnected_flag == 0)
-                    {
-                        // Create tcp client
-                        tcpClient = new TcpClient();
-
-                        // connect to the server socket
-                        serverIP_PortList.Add(new KeyValuePair<string, int>(ServerIP, ServerPort));
-                        tcpClient.Connect(ServerIP, ServerPort);
-                        stream = tcpClient.GetStream();
-                        LogTextBox.AppendText("Connected to " + ServerIP + ": " + ServerPort);
-                    }
-
-                }*/
 
                 Task.Run(() => StartClient());
 

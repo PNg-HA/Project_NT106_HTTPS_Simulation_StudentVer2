@@ -38,24 +38,15 @@ namespace ClientStudentVer
             this.label3 = new System.Windows.Forms.Label();
             this.RespHeadTextBox = new System.Windows.Forms.TextBox();
             this.SignOutButton = new System.Windows.Forms.Button();
-            this.SexTextBox = new System.Windows.Forms.TextBox();
-            this.DepartTextBox = new System.Windows.Forms.TextBox();
-            this.NameTextBox = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.UpdateButt = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.DeliLabel = new System.Windows.Forms.Label();
             this.FinishSignUpButt = new System.Windows.Forms.Button();
             this.LogTextBox = new System.Windows.Forms.TextBox();
-            this.webBrowser = new System.Windows.Forms.WebBrowser();
-            this.DeleteButton = new System.Windows.Forms.Button();
-            this.GetButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.SendButton = new System.Windows.Forms.Button();
             this.MethodComboBox = new System.Windows.Forms.ComboBox();
+            this.webBrowser = new System.Windows.Forms.WebBrowser();
             this.SuspendLayout();
             // 
             // SignInButton
@@ -156,60 +147,6 @@ namespace ClientStudentVer
             this.SignOutButton.UseVisualStyleBackColor = true;
             this.SignOutButton.Click += new System.EventHandler(this.SignOutButton_Click);
             // 
-            // SexTextBox
-            // 
-            this.SexTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
-            this.SexTextBox.Location = new System.Drawing.Point(200, 833);
-            this.SexTextBox.Name = "SexTextBox";
-            this.SexTextBox.Size = new System.Drawing.Size(273, 34);
-            this.SexTextBox.TabIndex = 31;
-            // 
-            // DepartTextBox
-            // 
-            this.DepartTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
-            this.DepartTextBox.Location = new System.Drawing.Point(200, 779);
-            this.DepartTextBox.Name = "DepartTextBox";
-            this.DepartTextBox.Size = new System.Drawing.Size(273, 34);
-            this.DepartTextBox.TabIndex = 30;
-            // 
-            // NameTextBox
-            // 
-            this.NameTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
-            this.NameTextBox.Location = new System.Drawing.Point(200, 720);
-            this.NameTextBox.Name = "NameTextBox";
-            this.NameTextBox.Size = new System.Drawing.Size(273, 34);
-            this.NameTextBox.TabIndex = 29;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(58, 833);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(107, 29);
-            this.label4.TabIndex = 28;
-            this.label4.Text = "Giới tính:";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(58, 779);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(75, 29);
-            this.label1.TabIndex = 27;
-            this.label1.Text = "Khoa:";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(58, 720);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(119, 29);
-            this.label6.TabIndex = 26;
-            this.label6.Text = "Họ và tên:";
-            // 
             // UpdateButt
             // 
             this.UpdateButt.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
@@ -220,16 +157,6 @@ namespace ClientStudentVer
             this.UpdateButt.Text = "Cập nhật";
             this.UpdateButt.UseVisualStyleBackColor = true;
             this.UpdateButt.Click += new System.EventHandler(this.UpdateButt_Click);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(138, 656);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(286, 37);
-            this.label7.TabIndex = 24;
-            this.label7.Text = "Thông tin sinh viên";
             // 
             // label8
             // 
@@ -275,36 +202,6 @@ namespace ClientStudentVer
             this.LogTextBox.Size = new System.Drawing.Size(357, 230);
             this.LogTextBox.TabIndex = 38;
             // 
-            // webBrowser
-            // 
-            this.webBrowser.Location = new System.Drawing.Point(461, 354);
-            this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(1087, 339);
-            this.webBrowser.TabIndex = 39;
-            // 
-            // DeleteButton
-            // 
-            this.DeleteButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.DeleteButton.Location = new System.Drawing.Point(233, 392);
-            this.DeleteButton.Name = "DeleteButton";
-            this.DeleteButton.Size = new System.Drawing.Size(112, 46);
-            this.DeleteButton.TabIndex = 40;
-            this.DeleteButton.Text = "Xóa";
-            this.DeleteButton.UseVisualStyleBackColor = true;
-            this.DeleteButton.Visible = false;
-            // 
-            // GetButton
-            // 
-            this.GetButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.GetButton.Location = new System.Drawing.Point(98, 392);
-            this.GetButton.Name = "GetButton";
-            this.GetButton.Size = new System.Drawing.Size(112, 46);
-            this.GetButton.TabIndex = 41;
-            this.GetButton.Text = "Lấy";
-            this.GetButton.UseVisualStyleBackColor = true;
-            this.GetButton.Visible = false;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -320,7 +217,7 @@ namespace ClientStudentVer
             this.SendButton.BackColor = System.Drawing.Color.DodgerBlue;
             this.SendButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SendButton.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.SendButton.Location = new System.Drawing.Point(200, 340);
+            this.SendButton.Location = new System.Drawing.Point(194, 396);
             this.SendButton.Name = "SendButton";
             this.SendButton.Size = new System.Drawing.Size(109, 43);
             this.SendButton.TabIndex = 44;
@@ -337,12 +234,20 @@ namespace ClientStudentVer
             "GET",
             "HEAD",
             "DELETE"});
-            this.MethodComboBox.Location = new System.Drawing.Point(81, 343);
+            this.MethodComboBox.Location = new System.Drawing.Point(75, 399);
             this.MethodComboBox.Name = "MethodComboBox";
             this.MethodComboBox.Size = new System.Drawing.Size(120, 37);
             this.MethodComboBox.TabIndex = 43;
             this.MethodComboBox.Text = "GET";
             this.MethodComboBox.Visible = false;
+            // 
+            // webBrowser
+            // 
+            this.webBrowser.Location = new System.Drawing.Point(461, 354);
+            this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser.Name = "webBrowser";
+            this.webBrowser.Size = new System.Drawing.Size(1087, 339);
+            this.webBrowser.TabIndex = 39;
             // 
             // Form1
             // 
@@ -352,22 +257,13 @@ namespace ClientStudentVer
             this.Controls.Add(this.SendButton);
             this.Controls.Add(this.MethodComboBox);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.GetButton);
-            this.Controls.Add(this.DeleteButton);
             this.Controls.Add(this.webBrowser);
             this.Controls.Add(this.LogTextBox);
             this.Controls.Add(this.FinishSignUpButt);
             this.Controls.Add(this.DeliLabel);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.SignOutButton);
-            this.Controls.Add(this.SexTextBox);
-            this.Controls.Add(this.DepartTextBox);
-            this.Controls.Add(this.NameTextBox);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.label6);
             this.Controls.Add(this.UpdateButt);
-            this.Controls.Add(this.label7);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.label3);
@@ -393,24 +289,15 @@ namespace ClientStudentVer
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox RespHeadTextBox;
         private System.Windows.Forms.Button SignOutButton;
-        private System.Windows.Forms.TextBox SexTextBox;
-        private System.Windows.Forms.TextBox DepartTextBox;
-        private System.Windows.Forms.TextBox NameTextBox;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button UpdateButt;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label DeliLabel;
         private System.Windows.Forms.Button FinishSignUpButt;
         private System.Windows.Forms.TextBox LogTextBox;
-        private System.Windows.Forms.WebBrowser webBrowser;
-        private System.Windows.Forms.Button DeleteButton;
-        private System.Windows.Forms.Button GetButton;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button SendButton;
         private System.Windows.Forms.ComboBox MethodComboBox;
+        private System.Windows.Forms.WebBrowser webBrowser;
     }
 }
 
