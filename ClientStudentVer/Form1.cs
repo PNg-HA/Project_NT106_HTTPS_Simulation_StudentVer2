@@ -33,24 +33,31 @@ namespace ClientStudentVer
         TcpClient tcpClient;
         List<KeyValuePair<string, int>> serverIP_PortList = new List<KeyValuePair<string, int>>();
         NetworkStream stream;
-        RSA PublicKey;
+
         // Cert-related folders and components
+        RSA PublicKey;
         static string CertSavedPath = @"..\\resources\\QuanNN.crt";
-        static string originFile = @"..\\resources\\File.txt";
         static string encrFolder = @"..\\resources\";
-        static string decrFolder = @"..\\resources\";
-        // static string encryptedFile = @"File.enc";
         static string EncryptedSymmetricKeyPath = @"..\\resources\\Key.enc";
         string cert_thumbprint = "95266410248877b4db407a0449e6e18516cca8e8";  // QuanNN-cert
         X509Certificate2 cert;
         static byte[] ClientSessionKey, ClientIV;
         static string credentials;
-        static int SignInFlag;
         public Form1()
         {
             InitializeComponent();
             Buttons_NotClicked();
             EstablishTCPConnection();
+        }
+        private string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+        public static string Base64Decode(string base64EncodedData)
+        {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
         private static void CreateSymmetricKey(RSA rsaPublicKey)
         {
@@ -291,43 +298,6 @@ namespace ClientStudentVer
                 }
             }
         }
-
-        //     BEGINNING OF CONTROL METHOD  //////////////////
-        private void usernameTextBox_Click(object sender, EventArgs e)
-        {
-            if (usernameTextBox.Text == "Tên tài khoản")
-            {
-                usernameTextBox.Text = "";
-            }
-        }
-
-        private void usernameTextBox_Leave(object sender, EventArgs e)
-        {
-            if (usernameTextBox.Text == "")
-            {
-                usernameTextBox.Text = "Tên tài khoản";
-            }
-        }
-        private void passTextBox_Leave(object sender, EventArgs e)
-        {
-            if (passTextBox.Text == "")
-            {
-                passTextBox.Text = "Mật khẩu";
-                passTextBox.UseSystemPasswordChar = false;
-            }
-            else
-            {
-                passTextBox.UseSystemPasswordChar = true;
-            }
-        }
-
-        private void passTextBox_Click(object sender, EventArgs e)
-        {
-            if (passTextBox.Text == "Mật khẩu")
-            {
-                passTextBox.Text = "";
-            }
-        }
         private void SignInButton_Clicked()
         {
 
@@ -336,43 +306,6 @@ namespace ClientStudentVer
             DisableSignUpButton(dumb);
             VisibleComboBox(dumb);
             VisibleSendButton(dumb);
-            /*SignOutButton.Enabled = true;
-            SignOutButton.Visible = true;
-            UpdateButt.Enabled = true;
-            UpdateButt.Visible = true;*/
-            // DeliLabel.Visible = true;
-            /*NameTextBox.Visible = true;
-            DepartTextBox.Visible = true;
-            SexTextBox.Visible = true;*/
-
-            // label7.Visible = true;
-
-            /*label1.Visible = true;            
-            label6.Visible = true;
-            label4.Visible = true;*/
-        }
-        private void SignUpButton_Clicked()
-        {
-            SignUpButton.Enabled = false;
-            SignInButton.Enabled = false;
-            /*SignOutButton.Enabled = true;
-            SignOutButton.Visible = true;
-            UpdateButt.Enabled = true;
-            UpdateButt.Visible = true;*/
-            DeliLabel.Visible = true;
-            /*NameTextBox.Visible = true;
-            DepartTextBox.Visible = true;
-            SexTextBox.Visible = true;*/
-
-
-            /*label1.Visible = true;            
-            label6.Visible = true;
-            label4.Visible = true;*/
-        }
-        private void SignOutButton_Clicked()
-        {
-            Buttons_NotClicked();
-            SignInButton.Enabled = true;
         }
         private void Buttons_NotClicked()
         {
@@ -383,196 +316,70 @@ namespace ClientStudentVer
             FinishSignUpButt.Enabled = false;
             FinishSignUpButt.Visible = false;
         }
-        private void SignInButton_Click(object sender, EventArgs e)
+        private string GenerateInfo()
         {
-            bool invalidflag = false;
-            foreach (char ch in usernameTextBox.Text)
-            {
-                if (invalidChars.Contains(ch))
-                {
-                    invalidflag = true;
-                    MessageBox.Show("Invalid characters existed in username!");
-                    usernameTextBox.Clear();
-                    break;
-                }
-            }
-            if (invalidflag == false)
-            {
-                credentials = Base64Encode(usernameTextBox.Text + '|' + passTextBox.Text);
-                string reqBody = "{\r\n  "
-                                        + usernameTextBox.Text + ": " + passTextBox.Text + "\r\n"
-                                        + "}\r\n";
-                string reqHeader = "POST /login" + " HTTP/1.1\r\n" // request line
-                                  // request headers
-                               + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
-                               + "Content-length: " + reqBody.Length + "\r\n"
-                               + "Authorization: Basic " + credentials + "\r\n"
-                               + "Content-type: application/json\r\n"
-                               + "Connection: keep-alive \r\n"
-                               + "Upgrade-Insecure-Requests: 1\r\n"
-                               + "User-Agent: C# client\r\n"
-                               + "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\n"
-                               + "Accept-Encoding: gzip, deflate\r\n"
-                               + "Accept-Language: en-US,en;q=0.9\r\n"
-                               + "\r\n";
-                
-                File.WriteAllText(@"..\resources\POST.txt", reqHeader + reqBody);
-                EncryptFile(@"..\resources\POST.txt", PublicKey);
-                SendEncryptedFile(@"..\resources\POST.enc");
-            }
-        }
-        private void passTextBox_TextChanged(object sender, EventArgs e)
-        {
-            passTextBox.UseSystemPasswordChar = true;
-        }
-        private void SignUpButton_Click(object sender, EventArgs e)
-        {
-            bool invalidflag = false;
-            foreach (char ch in usernameTextBox.Text)
-            {
-                if (invalidChars.Contains(ch))
-                {
-                    invalidflag = true;
-                    MessageBox.Show("Invalid characters existed in username!");
-                    usernameTextBox.Clear();
-                    break;
-                }
-            }
-            if (invalidflag == false)
-            {
-                credentials = Base64Encode(usernameTextBox.Text + '|' + passTextBox.Text);
-                string reqBody = "{\r\n  "
-                                        + usernameTextBox.Text + ": " + passTextBox.Text + "\r\n"
-                                        + "}\r\n";
-                string reqHeader = "POST /register" + " HTTP/1.1\r\n" // request line
-                                                                       // request headers
-                               + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
-                               + "Content-length: " + reqBody.Length + "\r\n"
-                               + "Authorization: Basic " + credentials + "\r\n"
-                               + "Content-type: application/json\r\n"
-                               + "Connection: keep-alive \r\n"
-                               + "Upgrade-Insecure-Requests: 1\r\n"
-                               + "User-Agent: C# client\r\n"
-                               + "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\n"
-                               + "Accept-Encoding: gzip, deflate\r\n"
-                               + "Accept-Language: en-US,en;q=0.9\r\n"
-                               + "\r\n";
-
-                usernameTextBox.Text = Base64Decode(credentials);
-                File.WriteAllText(@"..\resources\POST.txt", reqHeader + reqBody);
-                EncryptFile(@"..\resources\POST.txt", PublicKey);
-                SendEncryptedFile(@"..\resources\POST.enc");
-
-            }
-
-            SignInButton.Enabled = false;
-            SignOutButton.Enabled = false;
-            SignOutButton.Visible = false;
-            UpdateButt.Visible = true;
-            UpdateButt.Enabled = true;
-            FinishSignUpButt.Enabled = true;
-            FinishSignUpButt.Visible = true;
-        }
-
-        private void SignOutButton_Click(object sender, EventArgs e)
-        {
-            SignOutButton_Clicked();
-        }
-
-        private void FinishSignUpButt_Click(object sender, EventArgs e)
-        {
-            SignOutButton_Clicked();
-        }
-
-        private void UpdateButt_Click(object sender, EventArgs e)
-        {
-            string reqBody = "";
-            string reqHeader = "GET /index.json" + " HTTP/1.1\r\n" // request line
-                                                                   // request headers
-                           + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
-                           + "Content-length: " + reqBody.Length + "\r\n"
-                           + "Authorization: Basic " + credentials + "\r\n"
-                           + "Content-type: application/json\r\n"
+            return
+                            "Content-type: application/json\r\n"
                            + "Connection: keep-alive \r\n"
                            + "Upgrade-Insecure-Requests: 1\r\n"
                            + "User-Agent: C# client\r\n"
-                           + "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\n"
+                           + "Accept: text/html;v=b3;q=0.7\r\n"
                            + "Accept-Encoding: gzip, deflate\r\n"
                            + "Accept-Language: en-US,en;q=0.9\r\n"
                            + "\r\n";
-
-            usernameTextBox.Text = Base64Decode(credentials);
-            File.WriteAllText(@"..\resources\GET.txt", reqHeader + reqBody);
+        }
+        private void DeleteButton_Click()
+        {
+            string reqHeader = "DELETE /index2.txt" + " HTTP/1.1\r\n" // request line
+                                                                      // request headers
+                           + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
+                           + "Content-length: 0" + "\r\n"
+                           + "Authorization: Basic " + credentials + "\r\n"
+                           + GenerateInfo();
+            PrintRequest(reqHeader);
+            File.WriteAllText(@"..\resources\DELETE.txt", reqHeader);
+            EncryptFile(@"..\resources\DELETE.txt", PublicKey);
+            SendEncryptedFile(@"..\resources\DELETE.enc");
+        }
+        private void GetButton_Click()
+        {
+            string reqHeader = "GET /index.html" + " HTTP/1.1\r\n" // request line
+                                                                   // request headers
+                           + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
+                           + "Content-length: 0" + "\r\n"
+                           + "Authorization: Basic " + credentials + "\r\n"
+                           + GenerateInfo();
+            PrintRequest(reqHeader);
+            File.WriteAllText(@"..\resources\GET.txt", reqHeader);
             EncryptFile(@"..\resources\GET.txt", PublicKey);
             SendEncryptedFile(@"..\resources\GET.enc");
         }
-
-        private void DeleteButton_Click()
-        {
-            string reqBody = "";
-            string reqHeader = "DELETE /index2.txt" + " HTTP/1.1\r\n" // request line
-                                                                     // request headers
-                           + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
-                           + "Content-length: " + reqBody.Length + "\r\n"
-                           + "Authorization: Basic " + credentials + "\r\n"
-                           + "Content-type: application/json\r\n"
-                           + "Connection: keep-alive \r\n"
-                           + "Upgrade-Insecure-Requests: 1\r\n"
-                           + "User-Agent: C# client\r\n"
-                           + "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\n"
-                           + "Accept-Encoding: gzip, deflate\r\n"
-                           + "Accept-Language: en-US,en;q=0.9\r\n"
-                           + "\r\n";
-
-            File.WriteAllText(@"..\resources\POST.txt", reqHeader + reqBody);
-            EncryptFile(@"..\resources\POST.txt", PublicKey);
-            SendEncryptedFile(@"..\resources\POST.enc");
-        }
-
-        private void GetButton_Click()
-        {
-            string reqBody = "";
-            string reqHeader = "GET /index2.txt" + " HTTP/1.1\r\n" // request line
-                                                                     // request headers
-                           + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
-                           + "Content-length: " + reqBody.Length + "\r\n"
-                           + "Authorization: Basic " + credentials + "\r\n"
-                           + "Content-type: application/json\r\n"
-                           + "Connection: keep-alive \r\n"
-                           + "Upgrade-Insecure-Requests: 1\r\n"
-                           + "User-Agent: C# client\r\n"
-                           + "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\n"
-                           + "Accept-Encoding: gzip, deflate\r\n"
-                           + "Accept-Language: en-US,en;q=0.9\r\n"
-                           + "\r\n";
-
-            File.WriteAllText(@"..\resources\POST.txt", reqHeader + reqBody);
-            EncryptFile(@"..\resources\POST.txt", PublicKey);
-            SendEncryptedFile(@"..\resources\POST.enc");
-        }
         private void HeadButton_Click()
         {
-            string reqBody = "";
-            string reqHeader = "HEAD /index2.txt" + " HTTP/1.1\r\n" // request line
-                                                                   // request headers
+            string reqHeader = "HEAD /index.html" + " HTTP/1.1\r\n" // request line
+                                                                    // request headers
                            + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
-                           + "Content-length: " + reqBody.Length + "\r\n"
+                           + "Content-length: 0" + "\r\n"
                            + "Authorization: Basic " + credentials + "\r\n"
-                           + "Content-type: application/json\r\n"
-                           + "Connection: keep-alive \r\n"
-                           + "Upgrade-Insecure-Requests: 1\r\n"
-                           + "User-Agent: C# client\r\n"
-                           + "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\n"
-                           + "Accept-Encoding: gzip, deflate\r\n"
-                           + "Accept-Language: en-US,en;q=0.9\r\n"
-                           + "\r\n";
-
-            File.WriteAllText(@"..\resources\POST.txt", reqHeader + reqBody);
-            EncryptFile(@"..\resources\POST.txt", PublicKey);
-            SendEncryptedFile(@"..\resources\POST.enc");
+                           + GenerateInfo();
+            PrintRequest(reqHeader);
+            File.WriteAllText(@"..\resources\HEAD.txt", reqHeader);
+            EncryptFile(@"..\resources\HEAD.txt", PublicKey);
+            SendEncryptedFile(@"..\resources\HEAD.enc");
         }
-        //     END OF CONTROL METHOD  ///////////////////////////////////////////////////
-
+        private void DefaultButton_Click(string method)
+        {
+            string reqHeader = method + " /index.html" + " HTTP/1.1\r\n" // request line
+                                                                    // request headers
+                           + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
+                           + "Content-length: 0" + "\r\n"
+                           + "Authorization: Basic " + credentials + "\r\n"
+                           + GenerateInfo();
+            PrintRequest(reqHeader);
+            File.WriteAllText(@"..\resources\default.txt", reqHeader);
+            EncryptFile(@"..\resources\default.txt", PublicKey);
+            SendEncryptedFile(@"..\resources\default.enc");
+        }
         private void Print_log(string log)
         {
             if (LogTextBox.InvokeRequired)
@@ -580,7 +387,7 @@ namespace ClientStudentVer
                 LogTextBox.Invoke(new Action<string>(Print_log), log);
                 return;
             }
-            LogTextBox.AppendText(log + Environment.NewLine);
+            LogTextBox.AppendText(log + Environment.NewLine + Environment.NewLine);
         }
         private void DisableSignUpButton(string s)
         {
@@ -626,10 +433,8 @@ namespace ClientStudentVer
             PrintResponse(headers);
             if (resp_line_items[1] != "200")  // failed request
             {
-                
                 return 1;
             }
-
             return 0;
         }
         private void print_status(string message)
@@ -654,7 +459,16 @@ namespace ClientStudentVer
                 RespHeadTextBox.Invoke(new Action<string>(PrintResponse), msg);
                 return;
             }
-            RespHeadTextBox.AppendText(msg + Environment.NewLine);
+            RespHeadTextBox.Text = msg;
+        }
+        private void PrintRequest(string msg)
+        {
+            if (RequestTextBox.InvokeRequired)
+            {
+                RequestTextBox.Invoke(new Action<string>(PrintRequest), msg);
+                return;
+            }
+            RequestTextBox.Text = msg;
         }
         private void HandleServerCert()
         {
@@ -678,7 +492,6 @@ namespace ClientStudentVer
             File.WriteAllBytes(CertSavedPath, certbuffer);
             stream.Flush();
         }
-
         private void ReceiveSave_File(string outFile)
         {
             // Receive Server File
@@ -703,7 +516,6 @@ namespace ClientStudentVer
             {
                 SignInButton_Clicked();
                 Print_body(resp_items[1]);
-
             }
             sr.Close();
         }
@@ -714,20 +526,30 @@ namespace ClientStudentVer
                 RespHeadTextBox.Invoke(new Action<string>(Print_body), body);
                 return;
             }
+            if (body == "")
+            {
+                MessageBox.Show("Empty");
+            }
             webBrowser.DocumentText = body;
         }
         private void StartClient()
         {
             stream = tcpClient.GetStream();
-            string response = "";
             ReceiveCert();
             HandleServerCert();
 
             SendEncryptedFile(EncryptedSymmetricKeyPath);    // Send encrypted key
-            while (true)
+            try
             {
-                HandleResponse();
-                stream.Flush();
+                while (true)
+                {
+                    HandleResponse();
+                    stream.Flush();
+                }
+            }
+            catch (Exception ex)
+            {
+                Print_log("ERR_CONNECTION_TIMED_OUT");
             }
         }
         private void HandleResponse()
@@ -736,7 +558,6 @@ namespace ClientStudentVer
             DecryptFile("response.enc");
             Print_log("Decrypt file successfullly.");
             LoadFile(@"..\resources\" + "response.txt");
-            
         }
         private void EstablishTCPConnection()
         {
@@ -747,13 +568,13 @@ namespace ClientStudentVer
 
                 // Create tcp client
                 tcpClient = new TcpClient();
+
                 // connect to the server socket
                 tcpClient.Connect(ServerHostname, ServerPort);
                 stream = tcpClient.GetStream();
                 Print_log("Connected to " + ServerHostname + ": " + ServerPort);
 
                 Task.Run(() => StartClient());
-
                 // Replacement
                 /*Thread ctThread = new Thread(StartClient);
                 ctThread.Start();*/
@@ -768,16 +589,11 @@ namespace ClientStudentVer
             {
                 Print_log(ex.ToString());
             }
-            // CheckCertificate();
         }
-        private string Base64Encode(string plainText)
-        {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
-        }
-
+        
         private void SendButton_Click(object sender, EventArgs e)
         {
+            Print_body("");
             switch (MethodComboBox.Text)
             {
                 case "GET":
@@ -797,18 +613,111 @@ namespace ClientStudentVer
                     break;
                 default:
                     {
-                        MessageBox.Show("HTTP Method Not Found!");
+                        DefaultButton_Click(MethodComboBox.Text);
                     }
                     break;
             }
         }
-        public static string Base64Decode(string base64EncodedData)
+        private bool InvalidCharCheck()
         {
-            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
-            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+            foreach (char ch in usernameTextBox.Text)
+            {
+                if (invalidChars.Contains(ch))
+                {
+                    MessageBox.Show("Invalid characters existed in username!");
+                    usernameTextBox.Clear();
+                    return true;
+                }
+            }
+            return false;
+        }
+        private void SignInButton_Click(object sender, EventArgs e)
+        {
+            if (InvalidCharCheck() == false)
+            {
+                credentials = Base64Encode(usernameTextBox.Text + '|' + passTextBox.Text);
+                string reqBody = "{\r\n"
+                                        + usernameTextBox.Text + ": " + passTextBox.Text + "\r\n"
+                                        + "}\r\n";
+                string reqHeader = "POST /login" + " HTTP/1.1\r\n" // request line
+                                                                   // request headers
+                               + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
+                               + "Content-length: " + reqBody.Length + "\r\n"
+                               + "Authorization: Basic " + credentials + "\r\n"
+                               + GenerateInfo();
+                PrintRequest(reqHeader + reqBody);
+                File.WriteAllText(@"..\resources\POST.txt", reqHeader + reqBody);
+                EncryptFile(@"..\resources\POST.txt", PublicKey);
+                SendEncryptedFile(@"..\resources\POST.enc");
+            }
+        }
+        private void SignUpButton_Click(object sender, EventArgs e)
+        {
+            if (InvalidCharCheck() == false)
+            {
+                credentials = Base64Encode(usernameTextBox.Text + '|' + passTextBox.Text);
+                string reqBody = "{\r\n  "
+                                        + usernameTextBox.Text + ": " + passTextBox.Text + "\r\n"
+                                        + "}\r\n";
+                string reqHeader = "POST /register" + " HTTP/1.1\r\n" // request line
+                                                                      // request headers
+                               + "Host: https://" + tcpClient.Client.RemoteEndPoint.ToString() + "\r\n"
+                               + "Content-length: " + reqBody.Length + "\r\n"
+                               + "Authorization: Basic " + credentials + "\r\n"
+                               + GenerateInfo();
+                PrintRequest(reqHeader + reqBody);
+                File.WriteAllText(@"..\resources\POST.txt", reqHeader + reqBody);
+                EncryptFile(@"..\resources\POST.txt", PublicKey);
+                SendEncryptedFile(@"..\resources\POST.enc");
+            }
         }
 
-
-
+        //     BEGINNING OF CONTROL METHOD  //////////////////
+        private void usernameTextBox_Click(object sender, EventArgs e)
+        {
+            if (usernameTextBox.Text == "Tên tài khoản")
+            {
+                usernameTextBox.Text = "";
+            }
+        }
+        private void usernameTextBox_Leave(object sender, EventArgs e)
+        {
+            if (usernameTextBox.Text == "")
+            {
+                usernameTextBox.Text = "Tên tài khoản";
+            }
+        }
+        private void passTextBox_Leave(object sender, EventArgs e)
+        {
+            if (passTextBox.Text == "")
+            {
+                passTextBox.Text = "Mật khẩu";
+                passTextBox.UseSystemPasswordChar = false;
+            }
+            else
+            {
+                passTextBox.UseSystemPasswordChar = true;
+            }
+        }
+        private void passTextBox_Click(object sender, EventArgs e)
+        {
+            if (passTextBox.Text == "Mật khẩu")
+            {
+                passTextBox.Text = "";
+            }
+        }
+        private void passTextBox_TextChanged(object sender, EventArgs e)
+        {
+            passTextBox.UseSystemPasswordChar = true;
+        }
+        private void SignOutButton_Click(object sender, EventArgs e)
+        {
+        }
+        private void FinishSignUpButt_Click(object sender, EventArgs e)
+        {
+        }
+        private void UpdateButt_Click(object sender, EventArgs e)
+        {
+        }
     }
 }

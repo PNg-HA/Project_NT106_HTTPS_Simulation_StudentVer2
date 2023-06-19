@@ -47,6 +47,9 @@ namespace ClientStudentVer
             this.SendButton = new System.Windows.Forms.Button();
             this.MethodComboBox = new System.Windows.Forms.ComboBox();
             this.webBrowser = new System.Windows.Forms.WebBrowser();
+            this.RequestTextBox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // SignInButton
@@ -162,7 +165,7 @@ namespace ClientStudentVer
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(1186, 23);
+            this.label8.Location = new System.Drawing.Point(1186, 35);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(60, 29);
             this.label8.TabIndex = 34;
@@ -205,10 +208,10 @@ namespace ClientStudentVer
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(466, 319);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(893, 311);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(99, 29);
+            this.label2.Size = new System.Drawing.Size(121, 36);
             this.label2.TabIndex = 42;
             this.label2.Text = "Render:";
             // 
@@ -217,7 +220,7 @@ namespace ClientStudentVer
             this.SendButton.BackColor = System.Drawing.Color.DodgerBlue;
             this.SendButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SendButton.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.SendButton.Location = new System.Drawing.Point(194, 396);
+            this.SendButton.Location = new System.Drawing.Point(226, 372);
             this.SendButton.Name = "SendButton";
             this.SendButton.Size = new System.Drawing.Size(109, 43);
             this.SendButton.TabIndex = 44;
@@ -234,7 +237,7 @@ namespace ClientStudentVer
             "GET",
             "HEAD",
             "DELETE"});
-            this.MethodComboBox.Location = new System.Drawing.Point(75, 399);
+            this.MethodComboBox.Location = new System.Drawing.Point(107, 375);
             this.MethodComboBox.Name = "MethodComboBox";
             this.MethodComboBox.Size = new System.Drawing.Size(120, 37);
             this.MethodComboBox.TabIndex = 43;
@@ -243,17 +246,51 @@ namespace ClientStudentVer
             // 
             // webBrowser
             // 
-            this.webBrowser.Location = new System.Drawing.Point(461, 354);
+            this.webBrowser.Location = new System.Drawing.Point(899, 350);
             this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(1087, 339);
+            this.webBrowser.Size = new System.Drawing.Size(649, 339);
             this.webBrowser.TabIndex = 39;
+            // 
+            // RequestTextBox
+            // 
+            this.RequestTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RequestTextBox.Location = new System.Drawing.Point(461, 350);
+            this.RequestTextBox.Multiline = true;
+            this.RequestTextBox.Name = "RequestTextBox";
+            this.RequestTextBox.ReadOnly = true;
+            this.RequestTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.RequestTextBox.Size = new System.Drawing.Size(417, 339);
+            this.RequestTextBox.TabIndex = 46;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(455, 310);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(134, 36);
+            this.label1.TabIndex = 45;
+            this.label1.Text = "Request:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(94, 323);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(255, 36);
+            this.label4.TabIndex = 47;
+            this.label4.Text = "Mô phỏng HTTPS";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1560, 864);
+            this.ClientSize = new System.Drawing.Size(1560, 712);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.RequestTextBox);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.SendButton);
             this.Controls.Add(this.MethodComboBox);
             this.Controls.Add(this.label2);
@@ -298,6 +335,9 @@ namespace ClientStudentVer
         private System.Windows.Forms.Button SendButton;
         private System.Windows.Forms.ComboBox MethodComboBox;
         private System.Windows.Forms.WebBrowser webBrowser;
+        private System.Windows.Forms.TextBox RequestTextBox;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label4;
     }
 }
 
